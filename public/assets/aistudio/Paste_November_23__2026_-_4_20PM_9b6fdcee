@@ -1,0 +1,1934 @@
+# MASTER PRODUCT BUILD PROMPT — RAQIMO CRM + TASKS
+## Complete Connected CRM & Project Management Experience
+
+### ROLE
+
+You are acting as a principal SaaS product designer, senior UI/UX architect, senior React/TypeScript frontend engineer, and product strategist.
+
+You are working on the existing Raqimo application:
+
+GitHub repository:
+https://github.com/hakemm663/raqimo
+
+Your mission is to design and implement two complete, production-quality frontend modules:
+
+1. Raqimo CRM
+2. Raqimo Tasks
+
+These modules must feel like native parts of Raqimo, not third-party applications embedded inside it.
+
+You must inspect the existing source code before making changes, understand the application's architecture, reuse existing components, preserve the established design language, and extend the existing navigation.
+
+Do not start from a blank application.
+
+---
+
+# PART 1 — PRODUCT IDENTITY AND DESIGN SYSTEM
+
+## 1.1 Raqimo identity
+
+Raqimo is an AI-powered Business Operating System for freelancers, independent professionals, and small businesses.
+
+Its purpose is to help business owners manage their customers, money, projects, daily operations, and business decisions from one connected workspace.
+
+The experience should feel:
+
+- Premium.
+- Minimal.
+- Intelligent.
+- Professional.
+- Modern.
+- Smooth.
+- Fast.
+- Intuitive for non-technical users.
+- Powerful enough for experienced project managers.
+
+The product should not look like a generic admin dashboard, an Odoo clone, or a Jira clone.
+
+It should have its own recognizable design language.
+
+## 1.2 Existing design identity — mandatory
+
+Preserve the existing Raqimo branding.
+
+Main colors:
+
+- Primary blue: #2680EB
+- Secondary cyan: #1FA6C9
+- Emerald green: #10B981
+- Dark background: #050505
+- Dark elevated surfaces: #0F0F0F
+- Main text: #F0F0F0
+- Light background: #F4F6F8
+- Light text: #0B1220
+
+Primary CTA buttons must use the Raqimo blue-to-cyan-to-emerald gradient.
+
+Use the same gradient family already used by the existing sign-in experience.
+
+Do not introduce an unrelated purple, orange, or generic SaaS color palette.
+
+## 1.3 Visual language
+
+The default experience must be dark.
+
+Use:
+
+- Black backgrounds.
+- Subtle glassmorphism.
+- Translucent surfaces.
+- Soft gradient highlights.
+- Thin borders.
+- Carefully controlled shadows.
+- Modern rounded corners.
+- Elegant hover states.
+- Smooth transitions.
+- Clear visual hierarchy.
+- Compact but comfortable spacing.
+
+Glassy design must be subtle and functional, not excessive.
+
+Use glass effects for:
+
+- Floating toolbars.
+- Context menus.
+- Dropdowns.
+- Command palettes.
+- Modals.
+- Selected cards.
+- Quick-action panels.
+- Floating creation controls.
+
+Do not make every surface transparent. Content must remain readable.
+
+Cards should have clear separation from their background.
+
+## 1.4 Responsive design
+
+Every page must work properly on:
+
+- Large desktop monitors.
+- Standard laptops.
+- Tablets.
+- Mobile devices.
+
+Desktop:
+Use the full sidebar, page toolbar, multi-column layouts, and expanded data tables.
+
+Tablet:
+Adapt grids, collapse secondary navigation, and preserve usable interactions.
+
+Mobile:
+Use compact navigation, horizontally scrollable board columns where appropriate, full-screen creation forms when necessary, bottom sheets, and touch-friendly actions.
+
+Never allow tables, dialogs, kanban boards, or toolbars to overflow the viewport unintentionally.
+
+## 1.5 Theme support
+
+Preserve the existing dark/light theme implementation.
+
+Every new component must support both themes.
+
+Dark theme:
+- Black and charcoal surfaces.
+- White primary text.
+- Muted gray secondary text.
+- Subtle white borders.
+
+Light theme:
+- Soft neutral backgrounds.
+- White elevated cards.
+- Dark readable typography.
+- Proper border contrast.
+- No invisible axis labels, text, icons, or dropdown items.
+
+Never hardcode dark-mode-only colors into components that should respond to the theme.
+
+Use semantic theme tokens wherever possible.
+
+## 1.6 Language and RTL
+
+Preserve the existing English/Arabic language switch.
+
+Every new feature must support:
+
+- English LTR.
+- Arabic RTL.
+- Correct Arabic typography.
+- Proper text alignment.
+- Logical spacing.
+- Reversed directional navigation where appropriate.
+- Correct placement of dropdowns, drawers, and side panels.
+
+Do not simply translate labels while leaving the layout in LTR.
+
+Use logical CSS properties rather than physical left/right assumptions wherever possible.
+
+Arabic should feel like a first-class product experience.
+
+---
+
+# PART 2 — EXISTING PROJECT PROTECTION
+
+Before implementation, inspect:
+
+- src/App.tsx
+- src/components/Sidebar.tsx
+- src/components/Header.tsx
+- src/components/tabs/ReportsTab.tsx
+- src/utils/reportsMetrics.ts
+- src/utils/reportsMetrics.test.ts
+- src/index.css
+- src/types/
+- Existing API and utility files.
+- package.json.
+- Existing components and available UI dependencies.
+
+Current project technology includes:
+
+- React 19.
+- TypeScript.
+- Vite.
+- Tailwind CSS 4.
+- Lucide React.
+- Recharts.
+- Motion.
+- Existing theme and language state.
+
+Treat the existing application as the source of truth.
+
+### Strict preservation requirements
+
+1. Do not replace App.tsx with an unrelated application.
+2. Do not recreate the sidebar from scratch.
+3. Do not redesign or rewrite the Reports page.
+4. Do not modify reportsMetrics.ts.
+5. Do not remove or weaken existing report tests.
+6. Do not break chart rendering or chart responsiveness.
+7. Do not change existing API authentication.
+8. Do not remove existing Raqimo identity assets.
+9. Do not introduce another theme management system.
+10. Do not duplicate existing dependencies unnecessarily.
+
+Add the new features through modular components and preserve the current application shell.
+
+Use the existing project conventions where possible.
+
+### UI library reference
+
+Use this exact shadcn/create configuration as a visual and component-system reference:
+
+https://ui.shadcn.com/create?template=vite-monorepo&base=radix&item=preview&preset=b1aJCaMrK&rtl=true&pointer=true
+
+Important:
+
+- Respect the selected Radix primitive system.
+- Respect the supplied preset.
+- Respect RTL support.
+- Use shadcn/ui component patterns.
+- Use Lucide icons.
+- Use accessible primitives.
+- Use consistent component variants.
+
+The current Raqimo project is already a Vite application. Do not scaffold a new monorepo inside it or replace its current project configuration just to use this reference.
+
+Inspect compatibility before adding components or dependencies.
+
+Use the preset's design decisions where compatible with the existing application.
+
+---
+
+# PART 3 — SIDEBAR AND APPLICATION NAVIGATION
+
+Extend the existing Raqimo sidebar.
+
+Do not remove existing navigation.
+
+Keep existing sections:
+
+- Home
+- Invoices
+- New Invoice
+- Expenses
+- Customers
+- Products & Services
+- Reports
+- Raqimo AI
+
+Add a dedicated CRM navigation group:
+
+### CRM
+- CRM Overview
+- Leads
+- Contacts
+- Companies
+- Deals & Pipeline
+- Activities
+- Follow-ups
+
+Add a dedicated Productivity navigation group:
+
+### Workspace
+- Tasks Overview
+- My Tasks
+- Projects
+- My Work
+- Boards
+- Calendar
+- Timeline
+- Workload
+
+The exact navigation can be refined based on usability, but all essential pages must remain accessible.
+
+Use meaningful Lucide icons:
+
+CRM:
+- Users
+- UserPlus
+- Contact
+- Building2
+- Handshake
+- Activity
+- CalendarClock
+
+Tasks:
+- CheckSquare
+- ListTodo
+- FolderKanban
+- Kanban
+- CalendarDays
+- GanttChart
+- Timer
+- UsersRound
+
+Use consistent icon sizing and active-state styling.
+
+Active navigation must have:
+- A subtle glass-like selected background.
+- A Raqimo gradient or cyan accent.
+- A clear active indicator.
+- Smooth transitions.
+
+Support expandable navigation groups.
+
+Remember active navigation when moving between pages.
+
+The mobile sidebar must work correctly.
+
+---
+
+# PART 4 — RAQIMO CRM
+
+## 4.1 CRM philosophy
+
+Build a complete but approachable customer relationship management system.
+
+The main goal is to help small businesses understand:
+
+- Who their customers are.
+- Which prospects may become customers.
+- Which opportunities are worth pursuing.
+- Which customers need attention.
+- What conversations and activities have happened.
+- How much revenue each relationship generates.
+- Which follow-ups are overdue.
+- Which deals are likely to close.
+
+Do not create a complicated enterprise CRM that overwhelms a small business owner.
+
+The interface must be easy to learn but provide advanced capabilities when needed.
+
+## 4.2 CRM overview dashboard
+
+Create an exceptional CRM Overview page.
+
+Header:
+- Page title: CRM Overview.
+- Contextual description.
+- Date range selector.
+- Search.
+- Create Lead.
+- Add Contact.
+- More actions.
+
+Summary cards:
+
+1. Total Contacts.
+2. Active Leads.
+3. Open Deals.
+4. Pipeline Value.
+5. Won Revenue.
+6. Conversion Rate.
+7. Overdue Follow-ups.
+
+Each card should contain:
+- Icon.
+- Metric.
+- Comparison with previous period.
+- Small trend indicator.
+- Optional contextual tooltip.
+
+Dashboard sections:
+
+### Sales Pipeline Snapshot
+Show deal distribution by stage.
+
+### Revenue Opportunities
+Show the value of open opportunities and expected closing dates.
+
+### Lead Sources
+Show where leads originate:
+- Website.
+- Social Media.
+- Referral.
+- Direct.
+- Advertisement.
+- Other.
+
+### Recent Activities
+Show calls, meetings, emails, notes, and follow-ups.
+
+### Follow-ups Requiring Attention
+Highlight:
+- Overdue follow-ups.
+- Leads without recent activity.
+- Deals approaching their expected closing dates.
+- Customers awaiting a response.
+
+### Top Customers
+Show customers ranked by revenue and relationship value.
+
+### AI Business Insights
+Display contextual recommendations such as:
+- A promising lead has not been contacted recently.
+- A deal has remained in the same stage too long.
+- A repeat customer may be ready for another purchase.
+- A customer has unpaid invoices.
+- A follow-up is overdue.
+
+These should be presented as suggestions, not unquestionable facts.
+
+## 4.3 Leads management
+
+Create a complete Leads page.
+
+A lead represents a potential customer who has not yet become a confirmed customer.
+
+Lead list must support:
+
+- Search.
+- Sorting.
+- Filtering.
+- Pagination.
+- Bulk selection.
+- Bulk assignment.
+- Bulk status changes.
+- Export UI.
+- Saved filters.
+- Column visibility.
+- Quick actions.
+
+Lead fields:
+
+- Full name.
+- Company.
+- Email.
+- Phone.
+- Source.
+- Lead status.
+- Lead score.
+- Assigned owner.
+- Estimated deal value.
+- Last contact date.
+- Next follow-up.
+- Created date.
+- Tags.
+
+Lead statuses:
+
+- New.
+- Contacted.
+- Qualified.
+- Unqualified.
+- Converted.
+- Lost.
+
+Lead detail experience:
+
+Create a premium side drawer or full detail page.
+
+It should include:
+
+1. Contact information.
+2. Company information.
+3. Lead source.
+4. Status.
+5. Assigned owner.
+6. Estimated value.
+7. Notes.
+8. Tags.
+9. Activity timeline.
+10. Tasks and follow-ups.
+11. Related deals.
+12. Related invoices, when applicable.
+
+Lead actions:
+
+- Edit lead.
+- Add note.
+- Log call.
+- Schedule meeting.
+- Send email (UI only unless an existing integration supports it).
+- Create follow-up.
+- Create task.
+- Assign owner.
+- Convert to contact/customer.
+- Convert to deal.
+- Archive.
+
+### Lead conversion
+
+Create a guided conversion workflow.
+
+When converting a lead, the user should be able to:
+
+- Create a new contact.
+- Link an existing contact.
+- Create or link a company.
+- Create an opportunity.
+- Create a project.
+- Generate a follow-up task.
+
+Show a clear conversion summary before confirmation.
+
+Prevent accidental duplicate contacts in the demo experience.
+
+## 4.4 Contacts
+
+Create a dedicated Contacts page.
+
+Contacts are real people associated with customers, companies, or business relationships.
+
+Support:
+
+- Contact list.
+- Grid/card view.
+- Search.
+- Advanced filters.
+- Sorting.
+- Tags.
+- Import/export interface.
+- Bulk actions.
+- Quick contact creation.
+
+Contact information:
+
+- Name.
+- Profile avatar or initials.
+- Email.
+- Phone.
+- Company.
+- Position.
+- Customer type.
+- Relationship status.
+- Assigned owner.
+- Total invoiced.
+- Outstanding balance.
+- Last interaction.
+- Next follow-up.
+
+Contact profile:
+
+Use a beautiful detail page with:
+
+- Identity and contact details.
+- Related company.
+- Related deals.
+- Invoices.
+- Total revenue.
+- Outstanding payments.
+- Activities.
+- Notes.
+- Tasks.
+- Timeline.
+- Communication history.
+
+Connect contacts to the existing Raqimo Customers functionality.
+
+Avoid maintaining two separate customer records for the same person.
+
+## 4.5 Companies
+
+Create a Companies page.
+
+Companies represent organizations related to contacts, customers, leads, and deals.
+
+Company fields:
+
+- Company name.
+- Logo or initials.
+- Industry.
+- Website.
+- Email.
+- Phone.
+- Address.
+- Company size.
+- Assigned owner.
+- Related contacts.
+- Open deals.
+- Total revenue.
+- Outstanding invoices.
+- Last activity.
+
+Company detail should show:
+
+- Overview.
+- People.
+- Deals.
+- Invoices.
+- Activities.
+- Tasks.
+- Notes.
+- Relationship history.
+
+A company can have multiple contacts.
+
+A contact may belong to one primary company, with the possibility of additional relationships if appropriate.
+
+## 4.6 Deals and sales pipeline
+
+This must be one of the strongest CRM experiences.
+
+Create a dedicated Deals & Pipeline page.
+
+Provide three primary views:
+
+1. Kanban pipeline.
+2. Deals table.
+3. Pipeline analytics.
+
+Pipeline stages should be configurable.
+
+Default stages:
+
+- New Opportunity.
+- Qualification.
+- Proposal.
+- Negotiation.
+- Won.
+- Lost.
+
+Each deal must have:
+
+- Deal title.
+- Associated contact.
+- Associated company.
+- Estimated value.
+- Currency.
+- Stage.
+- Probability.
+- Expected closing date.
+- Owner.
+- Source.
+- Priority.
+- Related tasks.
+- Notes.
+- Last activity.
+
+### Kanban pipeline
+
+Create polished horizontal columns.
+
+Each deal card should display:
+
+- Deal name.
+- Company/contact.
+- Estimated value.
+- Probability.
+- Expected close date.
+- Owner avatar.
+- Priority.
+- Activity indicator.
+
+Support:
+
+- Drag and drop.
+- Stage changes.
+- Quick edit.
+- Deal creation.
+- Deal detail drawer.
+- Column totals.
+- Deal counts.
+- Stage-specific actions.
+
+Provide clear drag-and-drop feedback.
+
+The Won and Lost stages must be visually distinct.
+
+### Deal detail
+
+Include:
+
+- Deal overview.
+- Pipeline progression.
+- Value and probability.
+- Associated contact.
+- Associated company.
+- Activity timeline.
+- Related tasks.
+- Related invoices.
+- Notes.
+- Expected closing date.
+
+Actions:
+
+- Edit deal.
+- Change stage.
+- Add activity.
+- Create task.
+- Create invoice.
+- Mark as won.
+- Mark as lost.
+- Reopen.
+
+### Deal-to-invoice connection
+
+When a deal is marked Won, provide an action to create an invoice using the related customer/contact details.
+
+Do not automatically create financial transactions.
+
+Require user confirmation.
+
+## 4.7 Activities and follow-ups
+
+Create a unified Activities page.
+
+Activity types:
+
+- Calls.
+- Meetings.
+- Emails.
+- Notes.
+- Follow-ups.
+- WhatsApp interactions (manual logging only unless integrated).
+- General interactions.
+
+Each activity should contain:
+
+- Type.
+- Title.
+- Description.
+- Related contact.
+- Related company.
+- Related deal.
+- Date and time.
+- Owner.
+- Completion status.
+
+Support:
+
+- Timeline view.
+- List view.
+- Filters.
+- Activity creation.
+- Follow-up scheduling.
+- Activity completion.
+- Overdue indicators.
+
+Create a clear Follow-ups view with:
+
+- Today.
+- Upcoming.
+- Overdue.
+- Completed.
+
+Follow-ups should connect to the Tasks module.
+
+Completing a follow-up should update its associated activity/task state consistently.
+
+---
+
+# PART 5 — RAQIMO TASKS
+
+## 5.1 Product philosophy
+
+Raqimo Tasks should combine the strongest workflow ideas from:
+
+- Jira.
+- Linear.
+- Asana.
+- Trello.
+- ClickUp.
+
+However, do not copy their visual identities.
+
+Build a more approachable, visually refined experience.
+
+Jira provides powerful issue management but can feel complicated.
+
+Linear provides speed and clarity but is primarily designed around product teams.
+
+Trello makes boards simple but can become limited for complex business workflows.
+
+Raqimo should combine:
+
+- Simple task creation.
+- Powerful task organization.
+- Project visibility.
+- Custom workflows.
+- Dependencies.
+- Priorities.
+- Deadlines.
+- Team collaboration.
+- Workload awareness.
+- CRM connections.
+- Financial connections.
+- AI-assisted productivity.
+
+The goal is a complete work-management system that a freelancer or small business owner can use without needing project-management training.
+
+## 5.2 Tasks overview
+
+Create a Tasks Overview dashboard.
+
+Header:
+- Tasks.
+- Date range.
+- Create Task.
+- Create Project.
+- Search.
+- Filters.
+
+KPI cards:
+
+- Total Tasks.
+- My Open Tasks.
+- In Progress.
+- Completed.
+- Overdue.
+- Due Today.
+- Upcoming Deadlines.
+
+Dashboard sections:
+
+### My Work
+Show the user's immediate responsibilities.
+
+### Priority Tasks
+Show critical and high-priority tasks.
+
+### Upcoming Deadlines
+Display the next important deadlines.
+
+### Project Progress
+Show active projects and completion percentages.
+
+### Recent Activity
+Show updates, comments, assignments, and completed tasks.
+
+### Workload
+Show the distribution of assigned tasks among team members.
+
+### AI Productivity Insights
+Show contextual suggestions:
+- Overloaded team members.
+- Tasks blocked by dependencies.
+- Overdue work.
+- Projects approaching deadlines.
+- Tasks without owners.
+- Work that may need reprioritization.
+
+## 5.3 My Tasks
+
+Create a dedicated My Tasks page.
+
+Provide multiple views:
+
+- List.
+- Board.
+- Calendar.
+- Timeline.
+
+Filters:
+
+- Status.
+- Priority.
+- Project.
+- Assignee.
+- Due date.
+- Labels.
+- Created date.
+- Overdue.
+- Unassigned.
+
+Task statuses:
+
+- Backlog.
+- To Do.
+- In Progress.
+- In Review.
+- Blocked.
+- Done.
+- Cancelled.
+
+Priorities:
+
+- No Priority.
+- Low.
+- Medium.
+- High.
+- Urgent.
+
+Each task must support:
+
+- Title.
+- Description.
+- Status.
+- Priority.
+- Assignee.
+- Reporter.
+- Start date.
+- Due date.
+- Estimated effort.
+- Actual time spent.
+- Project.
+- Parent task.
+- Subtasks.
+- Dependencies.
+- Labels.
+- Attachments.
+- Comments.
+- Activity history.
+
+### Task creation
+
+Task creation must be extremely smooth.
+
+Provide a quick-create dialog that opens without leaving the current page.
+
+Required interaction:
+
+1. Enter task title.
+2. Add description optionally.
+3. Select project.
+4. Select assignee.
+5. Set priority.
+6. Set due date.
+7. Add labels.
+8. Save.
+
+Support keyboard shortcuts where practical.
+
+Allow users to create tasks directly from:
+- CRM contacts.
+- CRM leads.
+- CRM deals.
+- Projects.
+- Calendar.
+- Global quick-create.
+
+## 5.4 Task detail experience
+
+This is one of the most important components.
+
+Build a polished task detail drawer or dedicated detail page.
+
+Layout:
+
+Main content:
+- Task title.
+- Description.
+- Rich text editing.
+- Subtasks.
+- Attachments.
+- Comments.
+- Activity history.
+
+Right properties panel:
+- Status.
+- Priority.
+- Assignee.
+- Reporter.
+- Project.
+- Due date.
+- Start date.
+- Estimated effort.
+- Labels.
+- Dependencies.
+
+### Subtasks
+
+Allow nested work breakdown.
+
+Example:
+
+Task: Launch new customer website.
+
+Subtasks:
+- Design landing page.
+- Implement responsive layout.
+- Integrate contact form.
+- Review SEO.
+- Deploy production build.
+
+Show completion progress.
+
+### Dependencies
+
+Support:
+
+- Blocks.
+- Is blocked by.
+- Related to.
+
+A task blocked by an unfinished dependency must have a visible blocked state.
+
+Prevent circular dependencies.
+
+### Comments and collaboration
+
+Support:
+
+- Comments.
+- Replies.
+- Mentions.
+- Reactions.
+- Attachments.
+- Activity timeline.
+
+Create a professional collaborative experience.
+
+For the frontend demo, simulate these interactions locally.
+
+## 5.5 Projects
+
+Create a complete Projects page.
+
+Projects are containers for related tasks, people, milestones, and business objectives.
+
+Project fields:
+
+- Name.
+- Description.
+- Status.
+- Owner.
+- Members.
+- Start date.
+- Target completion.
+- Progress.
+- Priority.
+- Related customer.
+- Related CRM deal.
+- Budget.
+- Related invoices.
+- Labels.
+
+Project statuses:
+
+- Planning.
+- Active.
+- On Hold.
+- Completed.
+- Archived.
+
+Project overview page:
+
+### Project summary
+Show:
+- Completion percentage.
+- Open tasks.
+- Completed tasks.
+- Overdue tasks.
+- Project owner.
+- Team members.
+- Target date.
+
+### Project task board
+Provide the project's Kanban board.
+
+### Project timeline
+Display tasks and milestones.
+
+### Project activity
+Show updates and comments.
+
+### Project resources
+Display attachments and useful links.
+
+### Project finances
+Display planned budget, linked invoices, recorded expenses, and remaining budget.
+
+Financial values must come from linked sample records, not invented calculations disconnected from the underlying data.
+
+### Project-to-CRM relationship
+
+Projects should support linking to:
+
+- A customer.
+- A company.
+- A contact.
+- A won deal.
+
+When a deal is won, offer to create a project from a predefined template.
+
+## 5.6 Boards and custom workflows
+
+Build a powerful but simple Kanban board.
+
+Board features:
+
+- Custom columns.
+- Drag-and-drop cards.
+- Add task.
+- Move tasks between columns.
+- Filter.
+- Group by assignee or priority.
+- Search.
+- Sort.
+- Card customization.
+- Board settings.
+
+Allow the user to configure their workflow.
+
+Example workflow:
+
+Backlog → To Do → In Progress → Review → Done.
+
+Provide a board template selector:
+
+- General Business.
+- Software Development.
+- Marketing.
+- Client Projects.
+- Personal Productivity.
+
+Each template should create a meaningful sample workflow.
+
+## 5.7 Calendar
+
+Create a unified calendar for work management.
+
+Views:
+
+- Month.
+- Week.
+- Day.
+- Agenda.
+
+Display:
+
+- Tasks.
+- Project deadlines.
+- Milestones.
+- CRM follow-ups.
+- Meetings.
+- Important business dates.
+
+Use clear colors by event type.
+
+Allow:
+
+- Creating tasks from dates.
+- Changing due dates.
+- Viewing task details.
+- Filtering by project.
+- Filtering by assignee.
+- Switching calendar views.
+
+Avoid clutter when many tasks share the same date.
+
+## 5.8 Timeline and milestones
+
+Create a timeline/Gantt-style view.
+
+Display:
+
+- Projects.
+- Tasks.
+- Start dates.
+- Due dates.
+- Dependencies.
+- Milestones.
+- Progress.
+
+Provide:
+
+- Day/week/month scale.
+- Today marker.
+- Dependency visualization.
+- Task grouping.
+- Expand/collapse project groups.
+
+The timeline must be usable on smaller screens through responsive scrolling.
+
+## 5.9 Workload management
+
+Create a Workload page.
+
+Its purpose is to help owners understand whether their team is overloaded or underutilized.
+
+Display:
+
+- Team members.
+- Assigned tasks.
+- Active tasks.
+- Overdue tasks.
+- Estimated workload.
+- Upcoming deadlines.
+
+Provide a weekly workload view.
+
+Use meaningful visual indicators.
+
+Avoid claiming precise capacity or availability when the required data is missing.
+
+---
+
+# PART 6 — THE RAGIMO CONNECTION ENGINE
+
+This is the most important differentiating capability.
+
+Do not build CRM and Tasks as isolated modules.
+
+Build a connected frontend experience where the same business records can be accessed from different workflows.
+
+## 6.1 CRM ↔ Tasks
+
+From any lead, contact, company, or deal, users should be able to:
+
+- Create a task.
+- Assign a task.
+- Schedule a follow-up.
+- View related tasks.
+- View completed tasks.
+- Track outstanding actions.
+
+From any task, users should be able to:
+
+- Open its related contact.
+- Open its related company.
+- Open its related deal.
+- Open its related project.
+
+## 6.2 CRM ↔ Invoices
+
+Connect CRM records to existing financial capabilities.
+
+A contact should show:
+- Total invoiced.
+- Paid invoices.
+- Outstanding balance.
+- Recent invoice activity.
+
+A deal should support:
+- Creating an invoice.
+- Viewing linked invoices.
+- Viewing invoice status.
+
+A company should aggregate related customer financial activity without double-counting.
+
+Never create actual payments or financial transactions automatically.
+
+## 6.3 Tasks ↔ Expenses
+
+Projects should be able to display expenses related to their work.
+
+Show:
+- Project expenses.
+- Budget.
+- Budget consumed.
+- Remaining budget.
+- Related expense records.
+
+Do not create an expense automatically when a task is completed.
+
+## 6.4 Tasks ↔ CRM follow-ups
+
+A CRM follow-up should be represented by a task or a linked task record.
+
+Avoid duplicate independent records.
+
+For example:
+
+A lead requires a call tomorrow.
+
+The user creates a follow-up.
+
+It appears in:
+- Lead detail.
+- Activities.
+- My Tasks.
+- Calendar.
+- Tasks Overview.
+
+Completing it should update the associated follow-up state.
+
+## 6.5 Tasks ↔ Raqimo AI
+
+Provide AI entry points in relevant locations.
+
+Examples:
+
+Inside a task:
+"Help me break this task into subtasks."
+
+Inside a project:
+"Summarize project progress."
+
+Inside CRM:
+"Suggest the next best action for this lead."
+
+Inside a deal:
+"Identify what is blocking this opportunity."
+
+Inside the dashboard:
+"Show me the most important things I should handle today."
+
+For this implementation, build the AI interaction interface and local demo responses only.
+
+Do not pretend that real AI backend operations are connected unless an existing supported integration is available.
+
+---
+
+# PART 7 — RAQIMO AI UX
+
+Create a consistent contextual AI experience.
+
+Use a small AI assistant button or contextual panel.
+
+It should be accessible without obstructing the primary workflow.
+
+AI capabilities to represent in the UI:
+
+CRM:
+- Lead summaries.
+- Lead qualification suggestions.
+- Follow-up recommendations.
+- Deal risk identification.
+- Customer relationship summaries.
+
+Tasks:
+- Task breakdown.
+- Project summaries.
+- Priority recommendations.
+- Dependency identification.
+- Workload insights.
+- Deadline risk identification.
+
+Cross-module:
+- Identify overdue customer actions.
+- Find projects associated with important opportunities.
+- Highlight projects with financial risks.
+- Summarize customer activity.
+
+AI actions must never silently change important business records.
+
+Show proposed changes and require explicit user confirmation before applying them.
+
+---
+
+# PART 8 — UI/UX INTERACTION REQUIREMENTS
+
+The entire frontend must feel like a working product, not a collection of static screenshots.
+
+Implement functional interactions for:
+
+- Sidebar navigation.
+- Page switching.
+- Search.
+- Filtering.
+- Sorting.
+- Pagination.
+- Tab navigation.
+- Dropdowns.
+- Context menus.
+- Dialogs.
+- Drawers.
+- Forms.
+- Form validation.
+- Create.
+- Edit.
+- Delete with confirmation.
+- Archive.
+- Drag and drop.
+- Kanban.
+- Quick actions.
+- Date selection.
+- View switching.
+- Saved filters.
+- Column visibility.
+- Bulk selection.
+- Bulk actions.
+- Comments.
+- Subtasks.
+- Activity timelines.
+- Task dependencies.
+- Toast notifications.
+- Empty states.
+- Loading states.
+- Error states.
+
+Use keyboard accessibility.
+
+Add keyboard shortcuts for high-frequency actions where appropriate.
+
+Provide clear feedback after every action.
+
+Never leave a visible button that does nothing.
+
+If a feature is intentionally demo-only, implement a meaningful local interaction instead of presenting a fake production integration.
+
+## Command palette
+
+Create a global command palette, accessible with Cmd/Ctrl + K.
+
+Support commands such as:
+
+- Create task.
+- Create project.
+- Create lead.
+- Create contact.
+- Search CRM.
+- Search tasks.
+- Navigate to a page.
+- Open recent records.
+
+## Global quick create
+
+Provide a convenient global create action.
+
+It should support:
+
+- New Task.
+- New Project.
+- New Lead.
+- New Contact.
+- New Deal.
+- New Follow-up.
+
+Use consistent form and modal components.
+
+---
+
+# PART 9 — DATA ARCHITECTURE AND DEMO BEHAVIOR
+
+This is a frontend-only implementation.
+
+Do not modify the production backend.
+
+Do not invent API endpoints.
+
+Do not modify the real authentication flow.
+
+Do not send real business data to external services.
+
+Create a clean, typed local demo data architecture.
+
+Suggested domain models:
+
+### CRM
+
+Lead:
+- id
+- name
+- email
+- phone
+- source
+- status
+- score
+- estimatedValue
+- ownerId
+- companyId
+- contactId
+- tags
+- createdAt
+- updatedAt
+- nextFollowUpAt
+
+Contact:
+- id
+- name
+- email
+- phone
+- companyId
+- position
+- ownerId
+- tags
+- createdAt
+
+Company:
+- id
+- name
+- industry
+- website
+- phone
+- address
+- ownerId
+
+Deal:
+- id
+- title
+- contactId
+- companyId
+- value
+- currency
+- stage
+- probability
+- expectedCloseDate
+- ownerId
+- source
+- priority
+
+Activity:
+- id
+- type
+- title
+- description
+- contactId
+- companyId
+- dealId
+- taskId
+- ownerId
+- occurredAt
+- status
+
+### Tasks
+
+Task:
+- id
+- title
+- description
+- status
+- priority
+- projectId
+- assigneeId
+- reporterId
+- parentTaskId
+- startDate
+- dueDate
+- estimatedMinutes
+- actualMinutes
+- labels
+- dependencyIds
+- relatedEntityType
+- relatedEntityId
+- createdAt
+- updatedAt
+
+Project:
+- id
+- name
+- description
+- status
+- ownerId
+- memberIds
+- startDate
+- dueDate
+- customerId
+- dealId
+- budget
+- currency
+- templateId
+
+Comment:
+- id
+- taskId
+- authorId
+- content
+- createdAt
+
+Milestone:
+- id
+- projectId
+- title
+- dueDate
+- status
+
+## 9.1 Shared data relationships
+
+Build consistent relationships.
+
+For example:
+
+- One company can have multiple contacts.
+- One contact can have multiple deals.
+- One deal can have multiple activities.
+- One project can have multiple tasks.
+- One task can have multiple comments.
+- One task can have multiple subtasks.
+- One project can link to one or more CRM records where appropriate.
+- A task can reference a lead, contact, company, or deal.
+- A customer can have multiple invoices.
+
+Use stable IDs.
+
+Avoid hardcoded relationships based on display names.
+
+## 9.2 Local persistence
+
+Use a clean local demo data repository.
+
+Persist user-created demo changes so the UI remains useful after refreshing.
+
+Keep demo state isolated from production data.
+
+Provide realistic sample records for:
+
+- Leads.
+- Contacts.
+- Companies.
+- Deals.
+- Activities.
+- Projects.
+- Tasks.
+- Comments.
+- Milestones.
+
+Use one consistent sample business scenario across CRM and Tasks.
+
+Example business:
+
+A small digital services agency managing website development, design, marketing, and consulting clients.
+
+Use realistic names, dates, amounts, task relationships, and project statuses.
+
+Ensure that the numbers displayed on dashboards are derived from the same sample records.
+
+Do not display inconsistent totals.
+
+Provide a reset-demo-data option.
+
+---
+
+# PART 10 — COMPONENT AND FILE ORGANIZATION
+
+Keep the application modular and easy to transfer into the actual Raqimo source code.
+
+Recommended structure, adapted to the existing repository:
+
+src/
+  components/
+    crm/
+      CRMLayout.tsx
+      CRMOverview.tsx
+      LeadsPage.tsx
+      LeadDetail.tsx
+      LeadForm.tsx
+      ContactsPage.tsx
+      ContactDetail.tsx
+      CompaniesPage.tsx
+      CompanyDetail.tsx
+      DealsPage.tsx
+      DealKanban.tsx
+      DealDetail.tsx
+      ActivitiesPage.tsx
+      FollowUpsPage.tsx
+
+    tasks/
+      TasksLayout.tsx
+      TasksOverview.tsx
+      MyTasksPage.tsx
+      TaskListView.tsx
+      TaskBoardView.tsx
+      TaskCalendarView.tsx
+      TaskTimelineView.tsx
+      TaskDetail.tsx
+      TaskForm.tsx
+      ProjectsPage.tsx
+      ProjectDetail.tsx
+      ProjectBoard.tsx
+      WorkloadPage.tsx
+      MilestoneTimeline.tsx
+
+    shared/
+      GlobalCommandPalette.tsx
+      GlobalQuickCreate.tsx
+      UniversalSearch.tsx
+      ActivityTimeline.tsx
+      EntityLink.tsx
+      EmptyState.tsx
+      LoadingState.tsx
+      ConfirmDialog.tsx
+      FilterBar.tsx
+      ViewSwitcher.tsx
+      GlassPanel.tsx
+      PageHeader.tsx
+      AIInsightPanel.tsx
+
+  hooks/
+    useCRM.ts
+    useTasks.ts
+    useProjects.ts
+    useGlobalSearch.ts
+    useDemoPersistence.ts
+
+  services/
+    crmRepository.ts
+    tasksRepository.ts
+    projectRepository.ts
+    demoDataService.ts
+
+  types/
+    crm.ts
+    tasks.ts
+    projects.ts
+    shared.ts
+
+  utils/
+    crmMetrics.ts
+    taskMetrics.ts
+    projectMetrics.ts
+    dateUtils.ts
+
+This structure is a guide, not permission to duplicate existing files.
+
+Reuse existing components and utilities where appropriate.
+
+Do not put the entire implementation into one giant App.tsx file.
+
+Keep business logic separate from presentation.
+
+Use reusable typed components.
+
+Avoid unnecessary abstractions.
+
+---
+
+# PART 11 — VISUAL QUALITY EXPECTATIONS
+
+The following pages must receive particular design attention:
+
+1. CRM Overview.
+2. Leads.
+3. Contact Details.
+4. Deal Pipeline.
+5. Tasks Overview.
+6. My Tasks.
+7. Task Detail.
+8. Project Overview.
+9. Project Board.
+10. Calendar.
+11. Timeline.
+12. Workload.
+
+Each page must have:
+
+- A strong page header.
+- Clear hierarchy.
+- Consistent spacing.
+- Meaningful data.
+- Appropriate actions.
+- Responsive behavior.
+- Excellent empty states.
+- Smooth transitions.
+- Proper light/dark styling.
+
+Avoid generic dashboard layouts where every page contains the same four cards and a table.
+
+Each page must have its own information architecture.
+
+Use realistic sample avatars and initials.
+
+Use subtle animations for:
+- Navigation.
+- Dialog entry.
+- Card interactions.
+- Drag and drop.
+- Dropdowns.
+- Page transitions.
+- Status changes.
+
+Animations should improve usability, not reduce performance.
+
+---
+
+# PART 12 — QUALITY ASSURANCE
+
+Before declaring the work complete:
+
+1. Run TypeScript checks.
+2. Run the production build.
+3. Fix all compilation errors.
+4. Check all navigation destinations.
+5. Test all visible buttons.
+6. Test task creation and editing.
+7. Test CRM lead creation and conversion.
+8. Test deal stage changes.
+9. Test task drag and drop.
+10. Test project creation.
+11. Test task dependencies.
+12. Test search and filters.
+13. Test local persistence.
+14. Test Arabic RTL.
+15. Test English LTR.
+16. Test dark theme.
+17. Test light theme.
+18. Test desktop responsiveness.
+19. Test tablet responsiveness.
+20. Test mobile responsiveness.
+21. Verify the original Reports page remains functional.
+22. Verify existing chart fixes remain unchanged.
+
+Check for:
+- Console errors.
+- Broken imports.
+- Missing icons.
+- Overflow.
+- Inaccessible controls.
+- Invalid dates.
+- Inconsistent metrics.
+- Broken relationships.
+- Duplicate sample records.
+
+Do not claim a test passed unless it was actually executed.
+
+---
+
+# PART 13 — IMPLEMENTATION STRATEGY
+
+Do not try to generate the entire system in one unstructured code dump.
+
+Work in controlled implementation phases.
+
+### Phase 1 — Understand and prepare
+
+- Inspect the entire existing application.
+- Identify the sidebar and navigation architecture.
+- Identify reusable UI components.
+- Understand theme and RTL handling.
+- Identify current dependencies.
+- Create an implementation plan.
+- Preserve existing functionality.
+
+### Phase 2 — Shared foundation
+
+Build:
+- CRM and Tasks navigation.
+- Shared component primitives.
+- Typed domain models.
+- Local demo data.
+- Persistence.
+- Shared search.
+- Global quick create.
+- Command palette.
+
+### Phase 3 — CRM
+
+Build and connect:
+- CRM Overview.
+- Leads.
+- Contacts.
+- Companies.
+- Deals.
+- Pipeline.
+- Activities.
+- Follow-ups.
+
+### Phase 4 — Tasks
+
+Build and connect:
+- Tasks Overview.
+- My Tasks.
+- Task detail.
+- Projects.
+- Kanban boards.
+- Calendar.
+- Timeline.
+- Workload.
+- Milestones.
+
+### Phase 5 — Connected workflows
+
+Implement:
+- CRM-to-Tasks relationships.
+- CRM-to-Invoices relationships.
+- Project-to-CRM relationships.
+- Project-to-Expenses relationships.
+- Contextual AI interface.
+- Global search and navigation.
+
+### Phase 6 — Polish and QA
+
+- Responsive refinement.
+- RTL verification.
+- Theme verification.
+- Interaction testing.
+- Visual consistency.
+- Build validation.
+- Existing Reports regression testing.
+
+Do not stop after building only the overview dashboards.
+
+All listed pages must have real UI implementations.
+
+---
+
+# PART 14 — FINAL ACCEPTANCE CRITERIA
+
+The project is not complete merely because the screens look attractive.
+
+It is complete when:
+
+- CRM and Tasks have separate, understandable navigation.
+- Every major page exists.
+- Every important workflow is interactive.
+- Records are connected across modules.
+- Demo data is consistent.
+- Changes persist locally.
+- Forms validate.
+- Dialogs and drawers work.
+- Kanban interactions work.
+- Task dependencies work.
+- CRM conversion works.
+- Tasks and follow-ups stay synchronized.
+- Existing invoices, expenses, customers, products, and reports remain accessible.
+- Dark and light themes work.
+- Arabic and English work.
+- Mobile layouts are usable.
+- The original Reports implementation and chart fixes remain intact.
+- The application builds successfully.
+
+### Final deliverables
+
+Provide:
+
+1. Complete implemented frontend.
+2. All new source files.
+3. Updated sidebar navigation.
+4. Updated application routing/navigation.
+5. Shared UI components.
+6. Typed domain models.
+7. Local demo data.
+8. Local persistence implementation.
+9. A clear file/folder change summary.
+10. Build and test results.
+11. A list of demo-only functionality.
+12. A list of features that would require future backend/API integration.
+
+Do not modify or deploy the production Raqimo application.
+
+Do not make production database changes.
+
+Do not claim production integrations exist when they are only simulated in the demo.
+
+---
+
+# FINAL PRODUCT DIRECTION
+
+Build Raqimo as one connected business operating experience.
+
+The CRM should help a business owner win and retain customers.
+
+The Tasks system should help them organize and deliver the work.
+
+Invoices and Expenses should help them understand the financial outcome.
+
+Raqimo AI should help them understand what is happening and what they should do next.
+
+Every module should strengthen the others.
+
+The result must be premium, visually distinctive, extremely usable, technically maintainable, and ready for a later integration into the real Raqimo product.
+
+**Do not sacrifice existing functionality for visual improvements. Do not sacrifice usability for complexity. Do not sacrifice consistency for novelty.**
+
+Build something that makes a small business owner feel that their entire business finally works together in one place.

@@ -7,7 +7,128 @@ import React, { useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ReportsTab } from "./components/tabs/ReportsTab";
+import { ExistingSectionViews } from "./components/tabs/ExistingSectionViews";
+import { CRMOverview } from "./components/crm/CRMOverview";
+import { LeadsPage } from "./components/crm/LeadsPage";
+import { ContactsPage } from "./components/crm/ContactsPage";
+import { CompaniesPage } from "./components/crm/CompaniesPage";
+import { DealsPage } from "./components/crm/DealsPage";
+import { ActivitiesPage } from "./components/crm/ActivitiesPage";
+import { FollowUpsPage } from "./components/crm/FollowUpsPage";
+import { TasksOverview } from "./components/tasks/TasksOverview";
+import { MyTasksPage } from "./components/tasks/MyTasksPage";
+import { ProjectsPage } from "./components/tasks/ProjectsPage";
+import { BoardsPage } from "./components/tasks/BoardsPage";
+import { CalendarPage } from "./components/tasks/CalendarPage";
+import { TimelinePage } from "./components/tasks/TimelinePage";
+import { WorkloadPage } from "./components/tasks/WorkloadPage";
+import { GlobalCommandPalette } from "./components/shared/GlobalCommandPalette";
+import { GlobalQuickCreate } from "./components/shared/GlobalQuickCreate";
+import { ToastHost } from "./components/shared/ToastHost";
+import { WorkspaceProvider, useWorkspace } from "./context/WorkspaceContext";
 import { authenticateTestUser } from "./lib/api";
+import { NavSectionId } from "./types/shared";
+
+interface ShellProps {
+  isDark: boolean;
+  onToggleTheme: () => void;
+  language: "en" | "ar";
+  onToggleLanguage: () => void;
+  activeSection: NavSectionId;
+  setActiveSection: (s: NavSectionId) => void;
+}
+
+const AppShell: React.FC<ShellProps> = ({
+  isDark,
+  onToggleTheme,
+  language,
+  onToggleLanguage,
+  activeSection,
+  setActiveSection,
+}) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { setCommandPaletteOpen, openQuickCreate, data } = useWorkspace();
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "reports":
+        return <ReportsTab isDark={isDark} language={language} />;
+      case "crm-overview":
+        return <CRMOverview />;
+      case "crm-leads":
+        return <LeadsPage />;
+      case "crm-contacts":
+        return <ContactsPage />;
+      case "crm-companies":
+        return <CompaniesPage />;
+      case "crm-deals":
+        return <DealsPage />;
+      case "crm-activities":
+        return <ActivitiesPage />;
+      case "crm-followups":
+        return <FollowUpsPage />;
+      case "tasks-overview":
+        return <TasksOverview />;
+      case "tasks-my":
+        return <MyTasksPage />;
+      case "tasks-work":
+        return <MyTasksPage myWorkOnly />;
+      case "tasks-projects":
+        return <ProjectsPage />;
+      case "tasks-boards":
+        return <BoardsPage />;
+      case "tasks-calendar":
+        return <CalendarPage />;
+      case "tasks-timeline":
+        return <TimelinePage />;
+      case "tasks-workload":
+        return <WorkloadPage />;
+      default:
+        return <ExistingSectionViews section={activeSection} />;
+    }
+  };
+
+  return (
+    <div
+      className={`min-h-screen flex ${
+        isDark ? "bg-[#050505] text-[#F0F0F0]" : "bg-[#F4F6F8] text-[#0B1220]"
+      } transition-colors duration-200`}
+    >
+      <Sidebar
+        language={language}
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        activeSection={activeSection}
+        invoiceCount={data.invoices.length}
+        onSelectSection={(sec) => {
+          setActiveSection(sec);
+          setMobileMenuOpen(false);
+        }}
+      />
+
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <Header
+          isDark={isDark}
+          onToggleTheme={onToggleTheme}
+          language={language}
+          onToggleLanguage={onToggleLanguage}
+          onToggleMobileMenu={() => setMobileMenuOpen(true)}
+          netCashAmount={11600}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+          onOpenQuickCreate={() => openQuickCreate({ mode: "task" })}
+        />
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          {renderSection()}
+        </main>
+      </div>
+
+      <GlobalCommandPalette />
+      <GlobalQuickCreate />
+      <ToastHost />
+    </div>
+  );
+};
 
 export default function App() {
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -26,8 +147,7 @@ export default function App() {
     }
   });
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("reports");
+  const [activeSection, setActiveSection] = useState<NavSectionId>("reports");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
@@ -56,53 +176,20 @@ export default function App() {
   }, []);
 
   return (
-    <div className={`min-h-screen flex ${isDark ? "bg-[#050505] text-[#F0F0F0]" : "bg-[#F4F6F8] text-[#0B1220]"} transition-colors duration-200`}>
-      {/* Sidebar */}
-      <Sidebar
+    <WorkspaceProvider
+      activeSection={activeSection}
+      setActiveSection={setActiveSection}
+      language={language}
+      isDark={isDark}
+    >
+      <AppShell
+        isDark={isDark}
+        onToggleTheme={() => setIsDark((prev) => !prev)}
         language={language}
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
+        onToggleLanguage={() => setLanguage((prev) => (prev === "en" ? "ar" : "en"))}
         activeSection={activeSection}
-        onSelectSection={(sec) => {
-          setActiveSection(sec);
-          setMobileMenuOpen(false);
-        }}
+        setActiveSection={setActiveSection}
       />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <Header
-          isDark={isDark}
-          onToggleTheme={() => setIsDark((prev) => !prev)}
-          language={language}
-          onToggleLanguage={() => setLanguage((prev) => (prev === "en" ? "ar" : "en"))}
-          onToggleMobileMenu={() => setMobileMenuOpen(true)}
-          netCashAmount={11600}
-        />
-
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
-          {activeSection === "reports" ? (
-            <ReportsTab isDark={isDark} language={language} />
-          ) : (
-            <div className="p-8 rounded-3xl bg-[#0F0F0F] border border-white/5 text-center space-y-3">
-              <h3 className="text-base font-bold text-white">
-                {language === "ar" ? "قسم تجريبي" : "Demo Navigation"}
-              </h3>
-              <p className="text-xs text-white/60">
-                {language === "ar"
-                  ? "تم تخصيص هذا التطبيق التجريبي لصفحة التقارير والتحليلات الحية وإصلاح مخططات البيانات."
-                  : "This demo focuses on the Reports page with real-time analytics, responsive chart grids, and theme contrast fixes."}
-              </p>
-              <button
-                onClick={() => setActiveSection("reports")}
-                className="px-4 py-2 rounded-xl bg-emerald-500 text-black text-xs font-bold cursor-pointer"
-              >
-                {language === "ar" ? "العودة للتقارير" : "Back to Reports"}
-              </button>
-            </div>
-          )}
-        </main>
-      </div>
-    </div>
+    </WorkspaceProvider>
   );
 }

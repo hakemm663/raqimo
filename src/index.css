@@ -82,13 +82,23 @@ html[lang="ar"] body {
 :root[data-theme="light"] .border-white\/5 { border-color: rgba(11,18,32,.08) !important; }
 :root[data-theme="light"] .border-white\/10 { border-color: rgba(11,18,32,.12) !important; }
 :root[data-theme="light"] .border-white\/20 { border-color: rgba(11,18,32,.18) !important; }
+:root[data-theme="light"] .divide-white\/5 > :not(:last-child) { border-color: rgba(11,18,32,.08) !important; }
 
 :root[data-theme="light"] .bg-white\/5 { background-color: rgba(11,18,32,.04) !important; }
 :root[data-theme="light"] .bg-white\/10 { background-color: rgba(11,18,32,.07) !important; }
+:root[data-theme="light"] .bg-white\/\[0\.02\] { background-color: rgba(11,18,32,.02) !important; }
 :root[data-theme="light"] .hover\:bg-white\/5:hover { background-color: rgba(11,18,32,.05) !important; }
 :root[data-theme="light"] .hover\:bg-white\/10:hover { background-color: rgba(11,18,32,.08) !important; }
+:root[data-theme="light"] .hover\:border-white\/20:hover { border-color: rgba(11,18,32,.22) !important; }
 
 :root[data-theme="light"] .bg-white.text-black { background-color: #2680EB !important; color: #fff !important; }
+
+/* Readable semantic accent contrast in light mode */
+:root[data-theme="light"] :is(.text-cyan-400, .text-cyan-300) { color: #0284C7 !important; }
+:root[data-theme="light"] :is(.text-emerald-400, .text-emerald-300) { color: #059669 !important; }
+:root[data-theme="light"] :is(.text-amber-400, .text-amber-300) { color: #B45309 !important; }
+:root[data-theme="light"] :is(.text-rose-400, .text-rose-300) { color: #E11D48 !important; }
+:root[data-theme="light"] :is(.text-blue-400, .text-blue-300) { color: #1D4ED8 !important; }
 
 /* Keep colored badge text white */
 :root[data-theme="light"] .bg-brand-gradient,

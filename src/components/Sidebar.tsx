@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RaqimoLogo } from "./RaqimoLogo";
 import {
   LayoutDashboard,
@@ -12,14 +12,30 @@ import {
   CreditCard,
   LogOut,
   X,
+  ChevronDown,
+  ChevronRight,
+  UserPlus,
+  Building2,
+  Handshake,
+  Activity,
+  CalendarClock,
+  CheckSquare,
+  FolderKanban,
+  Kanban,
+  CalendarDays,
+  GanttChart,
+  Timer,
+  Briefcase,
 } from "lucide-react";
+import { NavSectionId } from "../types/shared";
 
 interface SidebarProps {
   language: "en" | "ar";
   isOpen?: boolean;
   onClose?: () => void;
-  activeSection?: string;
-  onSelectSection?: (s: string) => void;
+  activeSection?: NavSectionId | string;
+  onSelectSection?: (s: NavSectionId) => void;
+  invoiceCount?: number;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -28,11 +44,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   activeSection = "reports",
   onSelectSection,
+  invoiceCount = 6,
 }) => {
   const isAr = language === "ar";
+  const [crmOpen, setCrmOpen] = useState(true);
+  const [tasksOpen, setTasksOpen] = useState(true);
+
+  const navBtnClass = (id: NavSectionId) =>
+    `w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+      activeSection === id
+        ? "bg-white/10 text-white font-bold shadow-sm border border-white/5"
+        : "text-white/70 hover:text-white hover:bg-white/5 font-medium"
+    }`;
 
   const content = (
-    <div className="flex flex-col h-full bg-[#050505] border-r border-white/5 p-4 select-none">
+    <div className="flex flex-col h-full bg-[#050505] border-e border-white/5 p-4 select-none">
       {/* Brand & Logo Header */}
       <div className="flex items-center justify-between pb-4 border-b border-white/5">
         <div className="flex items-center gap-3">
@@ -45,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5"
+            className="lg:hidden p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />
@@ -54,12 +80,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Greeting card */}
-      <div className="py-4 border-b border-white/5">
+      <div className="py-3.5 border-b border-white/5">
         <h3 className="text-base font-bold text-white leading-tight">
           {isAr ? "مرحباً بعودتك، QA" : "Welcome back, QA"}
         </h3>
         <p className="text-[11px] text-white/60 flex items-center gap-1.5 mt-1">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
           <span>{isAr ? "كل شيء محدّث الآن" : "Everything is up to date"}</span>
         </p>
       </div>
@@ -72,16 +98,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {isAr ? "نظرة عامة" : "Overview"}
           </span>
           <div className="mt-1.5 space-y-1">
-            <button
-              onClick={() => onSelectSection?.("home")}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "home"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "الرئيسية" : "Home"}</span>
+            <button onClick={() => onSelectSection?.("home")} className={navBtnClass("home")}>
+              <div className="flex items-center gap-3">
+                <LayoutDashboard className={`w-4 h-4 ${activeSection === "home" ? "text-cyan-400" : "text-white/60"}`} />
+                <span>{isAr ? "الرئيسية" : "Home"}</span>
+              </div>
+              {activeSection === "home" && <span className="w-1 h-4 rounded-full bg-cyan-400 shrink-0" />}
             </button>
           </div>
         </div>
@@ -92,67 +114,129 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {isAr ? "الأعمال" : "Business"}
           </span>
           <div className="mt-1.5 space-y-1">
-            <button
-              onClick={() => onSelectSection?.("invoices")}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "invoices"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
+            <button onClick={() => onSelectSection?.("invoices")} className={navBtnClass("invoices")}>
               <div className="flex items-center gap-3">
-                <FileText className="w-4 h-4 text-white/60" />
+                <FileText className={`w-4 h-4 ${activeSection === "invoices" ? "text-cyan-400" : "text-white/60"}`} />
                 <span>{isAr ? "الفواتير" : "Invoices"}</span>
               </div>
               <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-white/10 text-white/80">
-                6
+                {invoiceCount}
               </span>
             </button>
 
-            <button
-              onClick={() => onSelectSection?.("new-invoice")}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              <PlusCircle className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "فاتورة جديدة" : "New invoice"}</span>
+            <button onClick={() => onSelectSection?.("new-invoice")} className={navBtnClass("new-invoice")}>
+              <div className="flex items-center gap-3">
+                <PlusCircle className="w-4 h-4 text-white/60" />
+                <span>{isAr ? "فاتورة جديدة" : "New invoice"}</span>
+              </div>
             </button>
 
-            <button
-              onClick={() => onSelectSection?.("expenses")}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "expenses"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Wallet className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "المصروفات" : "Expenses"}</span>
+            <button onClick={() => onSelectSection?.("expenses")} className={navBtnClass("expenses")}>
+              <div className="flex items-center gap-3">
+                <Wallet className={`w-4 h-4 ${activeSection === "expenses" ? "text-cyan-400" : "text-white/60"}`} />
+                <span>{isAr ? "المصروفات" : "Expenses"}</span>
+              </div>
             </button>
 
-            <button
-              onClick={() => onSelectSection?.("customers")}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "customers"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Users className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "العملاء" : "Customers"}</span>
+            <button onClick={() => onSelectSection?.("customers")} className={navBtnClass("customers")}>
+              <div className="flex items-center gap-3">
+                <Users className={`w-4 h-4 ${activeSection === "customers" ? "text-cyan-400" : "text-white/60"}`} />
+                <span>{isAr ? "العملاء" : "Customers"}</span>
+              </div>
             </button>
 
-            <button
-              onClick={() => onSelectSection?.("products")}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "products"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Package className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "المنتجات والخدمات" : "Products & services"}</span>
+            <button onClick={() => onSelectSection?.("products")} className={navBtnClass("products")}>
+              <div className="flex items-center gap-3">
+                <Package className={`w-4 h-4 ${activeSection === "products" ? "text-cyan-400" : "text-white/60"}`} />
+                <span>{isAr ? "المنتجات والخدمات" : "Products & services"}</span>
+              </div>
             </button>
           </div>
+        </div>
+
+        {/* CRM Section */}
+        <div>
+          <button
+            onClick={() => setCrmOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-3 text-[10px] uppercase font-bold tracking-wider text-white/40 hover:text-white/70 cursor-pointer"
+          >
+            <span>{isAr ? "علاقات العملاء CRM" : "Raqimo CRM"}</span>
+            {crmOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+          </button>
+          {crmOpen && (
+            <div className="mt-1.5 space-y-1">
+              {(
+                [
+                  { id: "crm-overview", en: "CRM Overview", ar: "نظرة عامة CRM", icon: LayoutDashboard },
+                  { id: "crm-leads", en: "Leads", ar: "العملاء المحتملون", icon: UserPlus },
+                  { id: "crm-contacts", en: "Contacts", ar: "جهات الاتصال", icon: Users },
+                  { id: "crm-companies", en: "Companies", ar: "الشركات", icon: Building2 },
+                  { id: "crm-deals", en: "Deals & Pipeline", ar: "الصفقات", icon: Handshake },
+                  { id: "crm-activities", en: "Activities", ar: "الأنشطة", icon: Activity },
+                  { id: "crm-followups", en: "Follow-ups", ar: "المتابعات", icon: CalendarClock },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                const active = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelectSection?.(item.id)}
+                    className={navBtnClass(item.id)}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Icon className={`w-4 h-4 shrink-0 ${active ? "text-cyan-400" : "text-white/60"}`} />
+                      <span className="truncate">{isAr ? item.ar : item.en}</span>
+                    </div>
+                    {active && <span className="w-1 h-4 rounded-full bg-cyan-400 shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Workspace / Tasks Section */}
+        <div>
+          <button
+            onClick={() => setTasksOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-3 text-[10px] uppercase font-bold tracking-wider text-white/40 hover:text-white/70 cursor-pointer"
+          >
+            <span>{isAr ? "المهام والمشاريع" : "Workspace & Tasks"}</span>
+            {tasksOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+          </button>
+          {tasksOpen && (
+            <div className="mt-1.5 space-y-1">
+              {(
+                [
+                  { id: "tasks-overview", en: "Tasks Overview", ar: "نظرة عامة المهام", icon: LayoutDashboard },
+                  { id: "tasks-my", en: "My Tasks", ar: "المهام", icon: CheckSquare },
+                  { id: "tasks-work", en: "My Work", ar: "عملي", icon: Briefcase },
+                  { id: "tasks-projects", en: "Projects", ar: "المشاريع", icon: FolderKanban },
+                  { id: "tasks-boards", en: "Boards", ar: "اللوحات", icon: Kanban },
+                  { id: "tasks-calendar", en: "Calendar", ar: "التقويم", icon: CalendarDays },
+                  { id: "tasks-timeline", en: "Timeline", ar: "الخط الزمني", icon: GanttChart },
+                  { id: "tasks-workload", en: "Workload", ar: "عبء العمل", icon: Timer },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                const active = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelectSection?.(item.id)}
+                    className={navBtnClass(item.id)}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Icon className={`w-4 h-4 shrink-0 ${active ? "text-cyan-400" : "text-white/60"}`} />
+                      <span className="truncate">{isAr ? item.ar : item.en}</span>
+                    </div>
+                    {active && <span className="w-1 h-4 rounded-full bg-cyan-400 shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Insights */}
@@ -161,35 +245,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {isAr ? "التحليلات" : "Insights"}
           </span>
           <div className="mt-1.5 space-y-1">
-            {/* Active Reports tab matching screenshot */}
-            <button
-              onClick={() => onSelectSection?.("reports")}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all relative ${
-                activeSection === "reports"
-                  ? "bg-white/10 text-white shadow-sm border border-white/5"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
+            <button onClick={() => onSelectSection?.("reports")} className={navBtnClass("reports")}>
               <div className="flex items-center gap-3">
                 <BarChart3 className={`w-4 h-4 ${activeSection === "reports" ? "text-cyan-400" : "text-white/60"}`} />
                 <span>{isAr ? "التقارير" : "Reports"}</span>
               </div>
-              {/* Vertical pill indicator */}
               {activeSection === "reports" && (
                 <span className="w-1 h-4 rounded-full bg-cyan-400 shrink-0" />
               )}
             </button>
 
-            <button
-              onClick={() => onSelectSection?.("ai")}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                activeSection === "ai"
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-white/60" />
-              <span>{isAr ? "رقيمو AI" : "Raqimo AI"}</span>
+            <button onClick={() => onSelectSection?.("ai")} className={navBtnClass("ai")}>
+              <div className="flex items-center gap-3">
+                <Sparkles className={`w-4 h-4 ${activeSection === "ai" ? "text-cyan-400" : "text-white/60"}`} />
+                <span>{isAr ? "رقيمو AI" : "Raqimo AI"}</span>
+              </div>
+              {activeSection === "ai" && <span className="w-1 h-4 rounded-full bg-cyan-400 shrink-0" />}
             </button>
           </div>
         </div>

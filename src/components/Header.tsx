@@ -10,6 +10,8 @@ import {
   Moon,
   X,
   TrendingUp,
+  Search,
+  Plus,
 } from "lucide-react";
 
 interface HeaderProps {
@@ -19,6 +21,8 @@ interface HeaderProps {
   onToggleLanguage: () => void;
   onToggleMobileMenu: () => void;
   netCashAmount?: number;
+  onOpenCommandPalette?: () => void;
+  onOpenQuickCreate?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,6 +32,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleLanguage,
   onToggleMobileMenu,
   netCashAmount = 11600,
+  onOpenCommandPalette,
+  onOpenQuickCreate,
 }) => {
   const isAr = language === "ar";
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -35,12 +41,12 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="h-20 border-b border-white/5 flex items-center justify-between px-4 sm:px-6 lg:px-8 bg-[#050505] sticky top-0 z-30 transition-colors">
+      <header className="h-16 sm:h-20 border-b border-white/5 flex items-center justify-between px-3 sm:px-6 lg:px-8 bg-[#050505] sticky top-0 z-30 transition-colors gap-2 sm:gap-3">
         {/* Left: Mobile Menu Button + User Welcome */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-hidden">
           <button
             onClick={onToggleMobileMenu}
-            className="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 border border-white/10 transition-colors"
+            className="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 border border-white/10 transition-colors cursor-pointer shrink-0"
             title={isAr ? "القائمة" : "Open menu"}
             aria-label={isAr ? "فتح القائمة" : "Open menu"}
           >
@@ -51,18 +57,18 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold shadow-sm font-mono text-base">
               Q
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#050505] rounded-full" />
+            <div className="absolute -bottom-0.5 -end-0.5 w-3 h-3 bg-emerald-500 border-2 border-[#050505] rounded-full" />
           </div>
 
-          <div>
-            <h2 className="text-sm lg:text-base font-light text-white/90">
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <h2 className="text-xs sm:text-sm lg:text-base font-light text-white/90 truncate">
               {isAr ? "أهلاً، " : "Hello, "}
               <span className="font-semibold text-white">QA Engineer</span>
             </h2>
-            <p className="text-[11px] text-white/60 flex items-center gap-1.5 mt-0.5 font-mono">
-              <span className="truncate max-w-[120px] sm:max-w-[200px]">DevOps</span>
-              <span>•</span>
-              <span className="text-cyan-400 font-medium flex items-center gap-0.5 shrink-0">
+            <p className="text-[11px] text-white/60 flex items-center gap-1.5 mt-0.5 font-mono truncate">
+              <span className="hidden sm:inline truncate max-w-[200px]">DevOps</span>
+              <span className="hidden sm:inline">•</span>
+              <span className="text-cyan-400 font-medium flex items-center gap-1 shrink-0">
                 <CheckCircle2 className="w-3 h-3 inline text-cyan-400" aria-hidden="true" />
                 {isAr ? "متزامن" : "Synced"}
               </span>
@@ -71,13 +77,42 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Right: Net Cash Flow & Controls */}
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 lg:gap-4 shrink-0">
+          {/* Global Search Trigger */}
+          {onOpenCommandPalette && (
+            <button
+              onClick={onOpenCommandPalette}
+              className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white text-xs flex items-center gap-2 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+              title={isAr ? "بحث سريع (Ctrl+K)" : "Global Search (Cmd/Ctrl + K)"}
+              aria-label="Open global command palette"
+            >
+              <Search className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="hidden xl:inline whitespace-nowrap">{isAr ? "بحث" : "Search"}</span>
+              <kbd className="hidden xl:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-white/50 shrink-0">
+                ⌘K
+              </kbd>
+            </button>
+          )}
+
+          {/* Quick Create Trigger */}
+          {onOpenQuickCreate && (
+            <button
+              onClick={onOpenQuickCreate}
+              className="px-2.5 py-1.5 rounded-xl bg-brand-gradient text-white text-xs font-bold flex items-center gap-1 shadow-sm hover:opacity-95 cursor-pointer shrink-0 whitespace-nowrap"
+              title={isAr ? "إنشاء سريع" : "Quick Create"}
+              aria-label="Quick create"
+            >
+              <Plus className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden md:inline whitespace-nowrap">{isAr ? "إنشاء" : "New"}</span>
+            </button>
+          )}
+
           {/* Net cash this month */}
-          <div className="text-right rtl:text-left hidden md:block">
+          <div className="text-end hidden lg:block">
             <p className="text-[10px] text-white/60 uppercase tracking-widest font-mono">
               {isAr ? "صافي النقد هذا الشهر" : "Net cash this month"}
             </p>
-            <p className="text-base lg:text-lg font-mono font-bold text-emerald-400">
+            <p className="text-base font-mono font-bold text-emerald-400">
               +${netCashAmount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
             </p>
           </div>
@@ -109,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Plans Button */}
           <button
-            className="px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[11px] font-bold font-mono transition-all hidden sm:flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[11px] font-bold font-mono transition-all hidden xl:flex items-center gap-1.5 cursor-pointer"
             title={isAr ? "إدارة الاشتراك" : "Manage subscription"}
           >
             <CreditCard className="w-3.5 h-3.5" />
@@ -119,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile App Trigger */}
           <button
             onClick={() => setMobileModalOpen(true)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-cyan-400 transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hidden sm:flex items-center justify-center text-cyan-400 transition-colors cursor-pointer"
             title={isAr ? "تطبيق الهاتف" : "Mobile App"}
             aria-label="Mobile App"
           >
@@ -130,12 +165,12 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/80 transition-colors cursor-pointer"
+              className="relative w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/80 transition-colors cursor-pointer"
               title={isAr ? "الإشعارات" : "Notifications"}
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] font-bold rounded-full font-mono">
+              <span className="absolute -top-1 -end-1 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] font-bold rounded-full font-mono">
                 9+
               </span>
             </button>
